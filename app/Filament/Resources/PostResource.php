@@ -68,19 +68,21 @@ class PostResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('id'),
-                TextColumn::make('title'),
-                TextColumn::make('slug'),
-                ColorColumn::make('color'),
-                TextColumn::make('category.name'),
-                ImageColumn::make('thumbnail'),
-                CheckboxColumn::make('published')
+                TextColumn::make('id')->label('Id')->toggleable(),
+                TextColumn::make('title')->searchable()->label('Title')->toggleable(),
+                TextColumn::make('slug')->label('Slug')->toggleable(),
+                ColorColumn::make('color')->label('Color')->toggleable(),
+                TextColumn::make('category.name')->searchable()->toggleable(),
+                ImageColumn::make('thumbnail')->label('Image')->toggleable(),
+                CheckboxColumn::make('published')->label('Published')->toggleable(),
+                TextColumn::make('created_at')->label('Published On')->date()->toggleable()
             ])
             ->filters([
                 //
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make()
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
