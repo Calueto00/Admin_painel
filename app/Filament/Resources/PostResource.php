@@ -40,16 +40,16 @@ class PostResource extends Resource
                 ->description('publish a new post')
                 ->schema([
 
-                    TextInput::make('title')->required(),
+                    TextInput::make('title')->rules('min:3|max:15')->required(),
                     ColorPicker::make('color')->required(),
-                    TextInput::make('slug')->required(),
+                    TextInput::make('slug')->unique()->required(),
                 ])->columnSpan(1)->columns(1),
 
                 Section::make('Meta')->schema([
                     Section::make()->schema([
                         Select::make('category_id')
                     ->options(Category::all()->pluck('name','id'))
-                    ->label('Category'),
+                    ->label('Category')->required(),
                     Checkbox::make('published')->required(),
                     ])->columns(2),
                     FileUpload::make('thumbnail')->disk('public')->directory('uploads'),
