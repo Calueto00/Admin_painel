@@ -28,6 +28,11 @@ class User extends Authenticatable
         return $this->belongsToMany(Post::class,'post__users')->withPivot(['order'])->withTimestamps();
     }
 
+    public function comments()
+    {
+        return $this->morphMany(Comments::class,'commentable');
+    }
+
     /**
      * The attributes that should be hidden for serialization.
      *
