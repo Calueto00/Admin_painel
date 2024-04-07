@@ -11,6 +11,7 @@ use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\ColorPicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\MarkdownEditor;
+use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TagsInput;
 use Filament\Forms\Components\TextInput;
@@ -35,20 +36,32 @@ class PostResource extends Resource
     {
         return $form
             ->schema([
-                FileUpload::make('thumbnail')->disk('public')->directory('uploads'),
-                TextInput::make('title')->required(),
-                ColorPicker::make('color')->required(),
-                TextInput::make('slug')->required(),
+                Section::make('Attribute')
+                ->description('publish a new post')
+                ->schema([
 
-                Select::make('category_id')
-                ->options(Category::all()->pluck('name','id'))
-                ->label('Category'),
+                    TextInput::make('title')->required(),
+                    ColorPicker::make('color')->required(),
+                    TextInput::make('slug')->required(),
+                ])->columnSpan(1)->columns(1),
 
-                MarkdownEditor::make('content')->required(),
+                Section::make('Meta')->schema([
+                    Section::make()->schema([
+                        Select::make('category_id')
+                    ->options(Category::all()->pluck('name','id'))
+                    ->label('Category'),
+                    Checkbox::make('published')->required(),
+                    ])->columns(2),
+                    FileUpload::make('thumbnail')->disk('public')->directory('uploads'),
 
-                Checkbox::make('published')->required(),
+                ])->columnSpan(1)->columns(1),
 
-            ]);
+
+                MarkdownEditor::make('content')->required()->columnSpan(2),
+
+
+
+            ])->columns(2);
     }
 
     public static function table(Table $table): Table
