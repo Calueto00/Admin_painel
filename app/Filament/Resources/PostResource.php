@@ -4,12 +4,14 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\PostResource\Pages;
 use App\Filament\Resources\PostResource\RelationManagers;
+use App\Filament\Resources\PostResource\RelationManagers\AuthorsRelationManager;
 use App\Models\Category;
 use App\Models\Post;
 use Filament\Forms;
 use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\ColorPicker;
 use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Group;
 use Filament\Forms\Components\MarkdownEditor;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
@@ -36,8 +38,8 @@ class PostResource extends Resource
     {
         return $form
             ->schema([
-                Section::make('Attribute')
-                ->description('publish a new post')
+                Section::make('Create')
+                ->description('Create a post over here')
                 ->schema([
 
                     TextInput::make('title')->rules('min:3|max:15')->required(),
@@ -45,7 +47,7 @@ class PostResource extends Resource
                     TextInput::make('slug')->unique()->required(),
                 ])->columnSpan(1)->columns(1),
 
-                Section::make('Meta')->schema([
+                Section::make()->schema([
                     Section::make()->schema([
                         Select::make('category_id')
                     ->relationship('category','name')
@@ -53,10 +55,16 @@ class PostResource extends Resource
                     ->label('Category')->required(),
                     Checkbox::make('published')->required(),
                     ])->columns(2),
-                    FileUpload::make('thumbnail')->disk('public')->directory('uploads'),
+                    FileUpload::make('thumbnail')->label('Image')->disk('public')->directory('uploads'),
+
 
                 ])->columnSpan(1)->columns(1),
 
+                //Section::make('Authors')->schema([
+                //    Select::make('Authors')
+                //    ->label('Co Authors')
+                //    ->relationship('authors','name')
+               // ]),
 
                 MarkdownEditor::make('content')->required()->columnSpan(2),
 
@@ -95,7 +103,7 @@ class PostResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            AuthorsRelationManager::class
         ];
     }
 
