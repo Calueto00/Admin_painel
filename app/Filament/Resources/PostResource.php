@@ -48,7 +48,8 @@ class PostResource extends Resource
                 Section::make('Meta')->schema([
                     Section::make()->schema([
                         Select::make('category_id')
-                    ->options(Category::all()->pluck('name','id'))
+                    ->relationship('category','name')
+                    ->searchable()
                     ->label('Category')->required(),
                     Checkbox::make('published')->required(),
                     ])->columns(2),
