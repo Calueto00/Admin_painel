@@ -15,6 +15,8 @@ use Filament\Forms\Components\Group;
 use Filament\Forms\Components\MarkdownEditor;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Tabs;
+use Filament\Forms\Components\Tabs\Tab;
 use Filament\Forms\Components\TagsInput;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
@@ -38,39 +40,35 @@ class PostResource extends Resource
     {
         return $form
             ->schema([
-                Section::make('Create')
-                ->description('Create a post over here')
-                ->schema([
 
-                    TextInput::make('title')->rules('min:3|max:15')->required(),
-                    ColorPicker::make('color')->required(),
-                    TextInput::make('slug')->unique()->required(),
-                ])->columnSpan(1)->columns(1),
+                Tabs::make('Create a new Post')->tabs([
+                    Tab::make('Attribute')
+                    ->icon('heroicon-m-inbox')
+                    ->schema([
+                        TextInput::make('title')->rules('min:3|max:15')->required(),
+                        ColorPicker::make('color')->required(),
+                        TextInput::make('slug')->unique()->required(),
+                    ])->columnSpanFull(),
 
-                Section::make()->schema([
-                    Section::make()->schema([
+                    Tab::make('Content')
+                    ->icon('heroicon-m-document-text')
+                    ->schema([
                         Select::make('category_id')
-                    ->relationship('category','name')
-                    ->searchable()
-                    ->label('Category')->required(),
-                    Checkbox::make('published')->required(),
-                    ])->columns(2),
-                    FileUpload::make('thumbnail')->label('Image')->disk('public')->directory('uploads'),
+                        ->relationship('category','name')
+                        ->searchable()
+                        ->label('Category')->required(),
+                        Checkbox::make('published')->required(),
+                        MarkdownEditor::make('content')->required()->columnSpanFull(),
+                    ])->columnSpanFull(),
 
+                    Tab::make('File Upload')
+                    ->icon('heroicon-m-photo')
+                    ->schema([
+                        FileUpload::make('thumbnail')->label('Image')->disk('public')->directory('uploads'),
+                    ])->columnSpanFull()
+                ])->columnSpanFull()->activeTab(3)->persistTabInQueryString(),
 
-                ])->columnSpan(1)->columns(1),
-
-                //Section::make('Authors')->schema([
-                //    Select::make('Authors')
-                //    ->label('Co Authors')
-                //    ->relationship('authors','name')
-               // ]),
-
-                MarkdownEditor::make('content')->required()->columnSpan(2),
-
-
-
-            ])->columns(2);
+                ]);
     }
 
     public static function table(Table $table): Table
