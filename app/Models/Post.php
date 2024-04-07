@@ -16,7 +16,12 @@ class Post extends Model
         'slug',
         'category_id',
         'content',
-        'tags',
-        'published'
     ];
+
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
+    }
+
+
 }
