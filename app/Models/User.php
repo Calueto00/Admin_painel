@@ -19,6 +19,15 @@ class User extends Authenticatable implements FilamentUser
     {
         return $this->email === 'admin@gmail.com';
     }
+
+    public function isAdmin(){
+        //return $this->role === self::ROLE_ADMIN;
+    }
+
+    public function isEditor(){
+       // return $this->role === self::ROLE_EDITOR;
+    }
+
     /**
      * The attributes that are mass assignable.
      *
